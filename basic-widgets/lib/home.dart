@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'color_button.dart';
 import 'components/category_card.dart';
 import 'components/post_card.dart';
+import 'components/restaurant_landscape_card.dart';
 import 'constants.dart';
 import 'models/models.dart';
 import 'theme_button.dart';
@@ -58,9 +59,12 @@ class _HomeState extends State<Home> {
           child: PostCard(post: posts[0]),
         ),
       ),
-      Container(
-        color: Colors.blue,
-      ),
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: RestaurantLandscapeCard(restaurant: restaurants[0]),
+        ),
+      )
     ];
 
     return Scaffold(

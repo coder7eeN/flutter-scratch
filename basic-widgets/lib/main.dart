@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'color_button.dart';
 import 'constants.dart';
 import 'home.dart';
-import 'theme_button.dart';
 
 void main() {
   // 1
