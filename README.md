@@ -17,5 +17,9 @@
 - Advanced Scrollable Widgets
 - Link: interactive-widgets
 
+### Chapter 7
+- Interactive Widgets
+- Link: advanced-interactive-widgets
+
 ## References
 - Flutter Apprentice by Kodeco
