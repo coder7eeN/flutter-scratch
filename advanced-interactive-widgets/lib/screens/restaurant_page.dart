@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/item_details.dart';
 import '../components/restaurant_item.dart';
 import '../models/cart_manager.dart';
 import '../models/order_manager.dart';
@@ -25,6 +26,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   static const double largeScreenPercentage = 0.9;
   static const double maxWidth = 1000;
   static const desktopThreshold = 700;
+
   // TODO: Define Drawer Max Width
   // TODO: Define Scaffold Key
 
@@ -127,6 +129,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     return InkWell(
       onTap: () {
         // Present Bottom Sheet in the future.
+        _showBottomSheet(item);
       },
       child: RestaurantItem(item: item),
     );
@@ -181,6 +184,21 @@ class _RestaurantPageState extends State<RestaurantPage> {
   // TODO: Create Drawer
   // TODO: Open Drawer
   // TODO: Create Floating Action Button
+
+  void _showBottomSheet(Item item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      constraints: const BoxConstraints(maxWidth: 480),
+      builder: (context) => ItemDetails(
+        item: item,
+        cartManager: widget.cartManager,
+        quantityUpdated: () {
+          setState(() {});
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
