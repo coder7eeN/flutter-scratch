@@ -21,5 +21,9 @@
 - Interactive Widgets
 - Link: advanced-interactive-widgets
 
+### Chapter 8
+- Routes & Navigation
+- Link: routes-and-navigation
+
 ## References
 - Flutter Apprentice by Kodeco
