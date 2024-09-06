@@ -51,6 +51,7 @@ class _CartControlState extends State<CartControl> {
         horizontal: 16,
         vertical: 8,
       ),
+      color: colorScheme.onPrimary,
       child: Text(
         _cartNumber.toString(),
       ),
