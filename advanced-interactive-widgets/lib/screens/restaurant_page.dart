@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../components/item_details.dart';
@@ -5,6 +6,7 @@ import '../components/restaurant_item.dart';
 import '../models/cart_manager.dart';
 import '../models/order_manager.dart';
 import '../models/restaurant.dart';
+import 'checkout_page.dart';
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;
@@ -29,6 +31,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   // TODO: Define Drawer Max Width
   // TODO: Define Scaffold Key
+  static const double drawerWidth = 375;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double _calculateConstrainedWidth(double screenWidth) {
     return (screenWidth > desktopThreshold
@@ -200,6 +204,40 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
+  void openDrawer() {
+    scaffoldKey.currentState!.openEndDrawer();
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: openDrawer,
+      label: Text('${widget.cartManager.items.length} Items in cart'),
+      icon: const Icon(Icons.shopping_cart),
+      tooltip: 'Cart',
+    );
+  }
+
+  Widget _buildEndDrawer() {
+    return SizedBox(
+      width: drawerWidth,
+      child: Drawer(
+        child: CheckoutPage(
+          cartManager: widget.cartManager,
+          didUpdate: () {
+            setState(() {});
+          },
+          onSubmit: (order) {
+            widget.ordersManager.addOrder(order);
+            Navigator.popUntil(
+              context,
+              (route) => route.isFirst,
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -209,6 +247,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
       // TODO: Add Scaffold Key
       // TODO: Apply Drawer
       // TODO: Apply Floating Action Button
+      key: scaffoldKey,
+      endDrawer: _buildEndDrawer(),
+      floatingActionButton: _buildFloatingActionButton(),
       body: Center(
         child: SizedBox(
           width: constrainedWidth,
