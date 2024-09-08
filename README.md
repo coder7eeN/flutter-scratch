@@ -25,5 +25,9 @@
 - Routes & Navigation
 - Link: routes-and-navigation
 
+### Chapter 9
+- Deep links & Web URLs
+- Link: deep-links-and-web-URLs
+
 ## References
 - Flutter Apprentice by Kodeco
