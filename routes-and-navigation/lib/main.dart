@@ -1,9 +1,13 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../models/models.dart';
 import 'constants.dart';
 import 'home.dart';
-import '../models/models.dart';
-import 'screens/screens.dart';
+import 'screens/login_page.dart';
+import 'screens/restaurant_page.dart';
 
 void main() {
   runApp(const Yummy());
@@ -41,8 +45,80 @@ class _YummyState extends State<Yummy> {
   final OrderManager _orderManager = OrderManager();
 
   // TODO: Initialize GoRouter
+  late final _router = GoRouter(
+    initialLocation: '/login',
+    redirect: _appRedirect,
+    errorPageBuilder: (context, state) {
+      return MaterialPage(
+        key: state.pageKey,
+        child: Scaffold(
+          body: Center(
+            child: Text(state.error.toString()),
+          ),
+        ),
+      );
+    },
+    routes: [
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => LoginPage(
+          onLogIn: (Credentials credentials) async {
+            _auth
+                .signIn(
+                  credentials.username,
+                  credentials.password,
+                )
+                .then(
+                  (_) => context.go('/${YummyTab.home.value}'),
+                );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/:tab',
+        builder: (context, state) {
+          return Home(
+            auth: _auth,
+            cartManager: _cartManager,
+            ordersManager: _orderManager,
+            changeTheme: changeThemeMode,
+            changeColor: changeColor,
+            colorSelected: colorSelected,
+            tab: int.tryParse(state.pathParameters['tab'] ?? '') ?? 0,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'restaurant/:id',
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+              final restaurant = restaurants[id];
+
+              return RestaurantPage(
+                  restaurant: restaurant,
+                  cartManager: _cartManager,
+                  ordersManager: _orderManager);
+            },
+          ),
+        ],
+      ),
+    ],
+  );
 
   // TODO: Add Redirect Handler
+
+  Future<String?> _appRedirect(
+      BuildContext context, GoRouterState state) async {
+    final loggedIn = await _auth.loggedIn;
+    final isOnLoginPage = state.matchedLocation == '/login';
+
+    if (!loggedIn) {
+      return '/login';
+    } else if (loggedIn && isOnLoginPage) {
+      return '/${YummyTab.home.value}';
+    }
+    return null;
+  }
 
   void changeThemeMode(bool useLightMode) {
     setState(() {
@@ -61,8 +137,11 @@ class _YummyState extends State<Yummy> {
   @override
   Widget build(BuildContext context) {
     // TODO: Replace with Router
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // Uncomment to remove Debug banner
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      // Uncomment to remove Debug banner
+      routerConfig: _router,
+      title: 'Yummy',
       scrollBehavior: CustomScrollBehavior(),
       themeMode: themeMode,
       theme: ThemeData(
@@ -75,7 +154,6 @@ class _YummyState extends State<Yummy> {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
-      home: LoginPage(onLogIn: (credentials) {}),
     );
   }
 }
