@@ -29,5 +29,9 @@
 - Deep links & Web URLs
 - Link: deep-links-and-web-URLs
 
+### Chapter 10
+- Handling Shared Preferences
+- Link: handling-shared-preferences
+
 ## References
 - Flutter Apprentice by Kodeco
