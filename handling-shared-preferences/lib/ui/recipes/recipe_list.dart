@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../network/service_interface.dart';
+import '../../providers.dart';
 import '../widgets/common.dart';
 import '../../data/models/models.dart';
 import '../../network/model_response.dart';
@@ -28,7 +29,7 @@ class RecipeList extends ConsumerStatefulWidget {
 
 class _RecipeListState extends ConsumerState<RecipeList> {
   // TODO Add Search Index Key
-
+  static const String prefSearchKey = 'previousSearches';
   late TextEditingController searchTextController;
   final ScrollController _scrollController = ScrollController();
   List<Recipe> currentSearchList = [];
@@ -84,10 +85,21 @@ class _RecipeListState extends ConsumerState<RecipeList> {
 
   void savePreviousSearches() async {
     // TODO Save Current Index
+    final prefs = ref.read(sharedPrefProvider);
+    prefs.setStringList(prefSearchKey, previousSearches);
   }
 
   void getPreviousSearches() async {
     // TODO Get Current Index
+    final prefs = ref.read(sharedPrefProvider);
+    if(prefs.containsKey(prefSearchKey)) {
+      final searches = prefs.getStringList(prefSearchKey);
+      if(searches != null) {
+        previousSearches = searches;
+      } else {
+        previousSearches = [];
+      }
+    }
   }
 
   @override
